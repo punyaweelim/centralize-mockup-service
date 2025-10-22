@@ -10,8 +10,8 @@ const STORE_NAME = 'vehicle_data_store';
 
 // 💡 การกำหนดค่า Netlify Blobs Token
 // เราจะดึงค่าจาก Environment Variables ที่ตั้งค่าไว้ใน Netlify UI
-const NETLIFY_BLOB_TOKEN = process.env.NETLIFY_BLOB_TOKEN;
-const NETLIFY_SITE_ID = process.env.NETLIFY_SITE_ID;
+const NETLIFY_BLOB_TOKEN = "nfp_BB2BP4kWzj3TVrFjkncBho2uMXinNuJKc1d5";
+const NETLIFY_SITE_ID = "b99de81e-5a17-4a38-8ea4-29abe1458c28";
 
 const app = express();
 
