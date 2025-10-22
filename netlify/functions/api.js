@@ -5,14 +5,14 @@ import bodyParser from 'body-parser';
 import { v4 as uuidv4 } from 'uuid';
 import serverless from 'serverless-http';
 
-// ** Netlify Blobs ** (Global scope is assumed in Netlify Runtime)
-// หาก Netlify Blobs ไม่ถูกเรียกใช้ใน global scope คุณอาจต้องใช้ import { getStore } from '@netlify/blobs'
+// 💡 การแก้ไขที่สำคัญ: ต้อง Import getStore อย่างชัดเจน
+import { getStore } from '@netlify/blobs'; 
+
 const STORE_NAME = 'vehicle_data_store'; 
 
 const app = express();
 
-// Middleware: ใช้ body-parser สำหรับ JSON requests (เพิ่ม limit สำหรับ Base64 images)
-// ⚠️ Note: 50mb is very large for a Serverless function. Netlify/Lambda limits may override this.
+// Middleware
 app.use(bodyParser.json({ limit: '50mb' })); 
 
 // ----------------------------------------------------------------
@@ -34,10 +34,11 @@ app.post('/vehicle-data', async (req, res) => {
     };
 
     try {
+        // ✅ ตอนนี้ getStore ถูก Import และใช้งานได้แล้ว
         const store = getStore(STORE_NAME); 
         await store.set(id, JSON.stringify(vehicleRecord)); 
 
-        // Log JSON structure for better analysis in Netlify logs
+        // Log
         console.log(JSON.stringify({
             level: 'INFO',
             event: 'RECORD_CREATED',
@@ -75,6 +76,7 @@ app.get('/vehicle-data/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
+        // ✅ getStore ใช้งานได้แล้ว
         const store = getStore(STORE_NAME);
         const rawRecord = await store.get(id); 
 
@@ -113,10 +115,8 @@ app.get('/vehicle-data/:id', async (req, res) => {
 
 
 // ----------------------------------------------------------------
-// ## Serverless Handler Wrapper (Critical Fix for 404)
 
-// **สำคัญ:** แก้ไขปัญหา 404 โดยการระบุ basePath ที่ Netlify ใช้สำหรับ Function นี้
-// 'api' คือชื่อไฟล์/ชื่อ Function ที่ถูก Deploy (e.g., api.js)
+// Serverless Handler Wrapper (ใช้ basePath เพื่อแก้ไขปัญหา 404)
 const handler = serverless(app, {
     basePath: '/.netlify/functions/api', 
 });
