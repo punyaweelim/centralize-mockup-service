@@ -1,0 +1,15 @@
+[build]
+  functions = "netlify/functions" # กำหนดโฟลเดอร์สำหรับ Serverless Functions
+
+[[blobs]]
+  # ชื่อ store ที่จะใช้เก็บข้อมูล (เปลี่ยนได้ตามต้องการ)
+  name = "vehicle_data_store" 
+  # กำหนดให้ชื่อนี้เข้าถึงได้ใน Netlify Function ด้วยตัวแปรชื่อ VEHICLE_DATA
+  environment = "VEHICLE_DATA" 
+
+[functions]
+  node_bundler = "esbuild" # แนะนำให้ใช้ esbuild สำหรับ ESM
+  directory = "netlify/functions"
+
+# ตั้งค่า Environment Variable ใน Netlify UI เพื่อระบุชื่อ Blob Store ที่ใช้ในโค้ด
+# KEY: NETLIFY_BLOB_STORE_NAME, VALUE: vehicle_data_store
